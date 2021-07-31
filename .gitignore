@@ -1,0 +1,13 @@
+# client ignore
+# dependencies
+client/node_modules
+
+# production
+client/build
+
+#server ignore 
+server/node_modules
+server/dist/*
+
+# misc
+.DS_Store

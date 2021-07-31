@@ -1,0 +1,144 @@
+/* Main App */
+.app {
+  align-items: center;
+  background-color: #f1f3f7;
+  padding: 20px;
+  height: 100vh;
+  font-family: Arial;
+}
+
+/* Login */
+.avatar {
+  border-radius: 20px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.selected_avatar {
+  border: 5px solid #1ecdc5;
+}
+
+/* Chat Room  */
+.chat_room {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 50px;
+  background-color: #fff;
+  box-shadow: 10px 10px 5px rgba(37, 35, 35, 0.1);
+  border-radius: 20px;
+  height: 80vh;
+}
+
+.sidebar {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 20px;
+  border-radius: 20px 0 0 20px;
+}
+
+.chat_area {
+  display: flex;
+  flex: 2;
+  flex-direction: column;
+  background-color: #f4f6fb;
+  align-items: center;
+  border-radius: 0 20px 20px 0;
+}
+
+/* Chat Room Components */
+.user_info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user_info > * {
+  margin: 5px 0;
+}
+
+.username {
+  font-weight: bold;
+  color: #808080;
+}
+
+.user_avatar {
+  border-radius: 50%;
+}
+
+.chat_log {
+  flex: 100;
+  padding: 20px;
+  overflow-y: auto;
+  width:80%
+}
+
+.chat_input {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  align-items: center;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px;
+  width: 90%
+}
+
+.chat_input input {
+  flex: 1;
+  border: 1px solid #d3d6e2;
+  border-radius: 10px;
+  font-size: 14px;
+  padding: 10px;
+  margin-right: 5px;
+}
+
+.chat_announcement {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;  
+}
+
+.chat_announcement.join{
+  background-color: #e6fbef;
+}
+
+.chat_announcement.leave{
+  background-color: #fbf6e6;
+}
+
+.chat_message_avatar {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  margin: 0 5px
+}
+
+.message_holder {
+  display: flex;
+  margin: 10px 0;
+}
+
+.message_holder.me {
+  justify-content: flex-end;  
+  align-items: flex-end;
+}
+
+.message_box {
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  background-color: #fff;
+  box-shadow: 0px 10px 10px rgba(104, 104, 104, 0.1);
+  border-radius: 10px;
+  padding: 8px;
+  margin: 0 10px;
+  max-width: 75%;
+}
+
+.message_text {
+  margin: 0 5px
+}
