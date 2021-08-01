@@ -6,11 +6,12 @@ import { UserContext } from "../contexts/userContext";
 const useWebSocket = () => {
     const { username, avatar } = useContext(UserContext)
     const [lastMessage, setLastMessage] = useState<ChatWebSocketMsg | null>(null)
+    const [activeUsers, setActiveUsers] = useState<User[]>([])
     const ws = useRef<WebSocket>();
 
-    // Send
+    // Senders
     const sendChatMessage = (messageText: string) => {
-        const payload: ChatWebSocketMsg = {
+        const payload = {
             type: 'Chat',
             username: username,
             avatar: avatar,
@@ -37,13 +38,20 @@ const useWebSocket = () => {
 
     useEffect(() => {
         ws.current = new WebSocket('ws://localhost:8888');
-        
+
         ws.current.onopen = () => {
             sendUserJoin()
         }
-        
+
+        ws.current.onclose = () => {
+            sendUserLeave()
+        }
+
+        // Receivers
         ws.current.onmessage = ({ data }) => {
-            setLastMessage(JSON.parse(data) as ChatWebSocketMsg)
+            const payload = JSON.parse(data) as WebSocketMsg 
+            if (['Chat', 'User Join', 'User Leave'].includes(payload.type)) setLastMessage(payload as ChatWebSocketMsg)
+            if ('User List' === payload.type) setActiveUsers(payload.users!)
         }
 
         return () => {
@@ -53,6 +61,7 @@ const useWebSocket = () => {
     }, []);
 
     return {
+        activeUsers,
         sendChatMessage,
         lastMessage
     }

@@ -8,9 +8,26 @@ type UserContext = {
     isUserLoggedIn: boolean
 }
 
-interface ChatWebSocketMsg {
-    type: 'User Join' | 'User Leave' | 'Chat',
+type User = {
     username: string,
+    avatar: string
+}
+
+interface ChatWebSocketMsg {
+    type: 'Chat' | 'User Join' | 'User Leave',
+    username: string,
+    avatar: string,
+    message?: string
+}
+
+// Type of websocket message ws receives
+interface WebSocketMsg {
+    type: 'Chat' | 'User Join' | 'User Leave' | 'User List',
+    users?: {
+        username: string,
+        avatar: string
+    }[],
+    username?: string,
     avatar?: string,
     message?: string
 }

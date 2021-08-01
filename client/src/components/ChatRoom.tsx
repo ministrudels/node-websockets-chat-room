@@ -49,7 +49,7 @@ const ChatRoom = () => {
     const [message, setMessage] = useState('')
     const [chatLog, setChatLog] = useState<ChatWebSocketMsg[] | null>(null)
 
-    const { sendChatMessage, lastMessage } = useWebSocket()
+    const { activeUsers, sendChatMessage, lastMessage } = useWebSocket()
 
     const handleSendMessage = () => {
         sendChatMessage(message)
@@ -76,7 +76,13 @@ const ChatRoom = () => {
                         Logout
                     </Button>
                 </div>
+                <span>Active users</span>
                 <div className='active_users'>
+                    {activeUsers.map(x => <div>
+                        <img src={x.avatar} className="chat_message_avatar" alt="" />
+                        <span>{x.username}</span>
+                    </div>)
+                    }
                     {/* TODO: Render active user list from websocket connection */}
                 </div>
             </div>

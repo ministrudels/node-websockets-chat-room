@@ -2,11 +2,12 @@ import * as express from 'express';
 import * as http from 'http';
 import * as WebSocket from 'ws';
 
-// Type of websocket message which wss receives and sends
+// Type of websocket message ws receives
 type WebSocketMsg = {
-    type: 'User Join' | 'User Leave' | 'Chat',
+    type: 'User Join' | 'User Leave' | 'User Typing' | 'Chat'
     username: string,
-    avatar?: string
+    avatar: string,
+    isTyping?: boolean,
     message?: string
 }
 
@@ -44,7 +45,7 @@ const broadcastUserList = () => {
 
 // Broadcast user is typing
 const broadcastUserIsTyping = (ws: WebSocket) => {
-    
+
 }
 
 wss.on('connection', function connection(ws) {
