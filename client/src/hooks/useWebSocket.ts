@@ -1,29 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../contexts/userContext";
 
-// Basically should just be a wrapper between the ui components and the WebSocket API -  
-// so that anyone using the Websocket doesnt need to know about the Websocket API
-
-const ws = new WebSocket('ws://localhost:8888')
-// ws.onopen = () => {
-//     console.log('websocket open')
-// }
+// Acts as a hook to the serverside socket the ui components and the WebSocket API -  
+// so that anyone using the Websocket doesnt need to know about the Websockets
 const useWebSocket = () => {
     const { username, avatar } = useContext(UserContext)
     const [lastMessage, setLastMessage] = useState<ChatWebSocketMsg | null>(null)
-
-    // Receive
-    ws.onmessage = ({ data }) => {
-        const wsMsg: ChatWebSocketMsg = JSON.parse(data)
-        setLastMessage(wsMsg)
-    }
-
-    // ws.onclose = () => {
-    //     ws.send(JSON.stringify({
-    //         type: 'User Leave',
-    //         username: username,
-    //     }))
-    // }
+    const ws = useRef<WebSocket>();
 
     // Send
     const sendChatMessage = (messageText: string) => {
@@ -33,11 +16,11 @@ const useWebSocket = () => {
             avatar: avatar,
             message: messageText
         }
-        ws.send(JSON.stringify(payload))
+        ws.current!.send(JSON.stringify(payload))
     }
 
     const sendUserJoin = () => {
-        ws.send(JSON.stringify({
+        ws.current!.send(JSON.stringify({
             type: 'User Join',
             username: username,
             avatar: avatar,
@@ -45,7 +28,7 @@ const useWebSocket = () => {
     }
 
     const sendUserLeave = () => {
-        ws.send(JSON.stringify({
+        ws.current!.send(JSON.stringify({
             type: 'User Leave',
             username: username,
             avatar: avatar,
@@ -53,13 +36,24 @@ const useWebSocket = () => {
     }
 
     useEffect(() => {
+        ws.current = new WebSocket('ws://localhost:8888');
         
-    })
+        ws.current.onopen = () => {
+            sendUserJoin()
+        }
+        
+        ws.current.onmessage = ({ data }) => {
+            setLastMessage(JSON.parse(data) as ChatWebSocketMsg)
+        }
+
+        return () => {
+            sendUserLeave()
+            ws.current!.close();
+        };
+    }, []);
 
     return {
-        sendUserJoin,
         sendChatMessage,
-        sendUserLeave,
         lastMessage
     }
 }

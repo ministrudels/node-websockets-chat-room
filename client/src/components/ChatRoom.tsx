@@ -49,7 +49,7 @@ const ChatRoom = () => {
     const [message, setMessage] = useState('')
     const [chatLog, setChatLog] = useState<ChatWebSocketMsg[] | null>(null)
 
-    const { sendChatMessage, sendUserJoin, sendUserLeave, lastMessage } = useWebSocket()
+    const { sendChatMessage, lastMessage } = useWebSocket()
 
     const handleSendMessage = () => {
         sendChatMessage(message)
@@ -65,12 +65,6 @@ const ChatRoom = () => {
         // Update Chat room state on updates from the websocket hook
         setChatLog(log => log ? log.concat(lastMessage!) : [lastMessage])
     }, [lastMessage])
-
-
-    useEffect(() => {
-        sendUserJoin()
-        return (() => sendUserLeave())
-    }, [])
 
     return (
         <div className={'chat_room'}>
