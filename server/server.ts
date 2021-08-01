@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as http from 'http';
 import * as WebSocket from 'ws';
 
-// Types of websocket messages it can take
+// Type of websocket message which wss receives and sends
 type WebSocketMsg = {
     type: 'User Join' | 'User Leave' | 'Chat',
     username: string,
@@ -10,36 +10,72 @@ type WebSocketMsg = {
     message?: string
 }
 
+type User = {
+    username: string,
+    avatar: string,
+}
+
 const port = 8888
 const server = http.createServer(express)
 const wss = new WebSocket.Server({ server })
 
-wss.on('connection', function connection(ws) {
-    // When a message is received by websocket, send the same message to everyone
-    const broadcastChatMessage = (username: string, avatar: string, message: string) => {
-        wss.clients.forEach(function each(client) {
-            if (client.readyState === WebSocket.OPEN){
-                client.send(JSON.stringify({
-                    type: 'Chat',
-                    username: username,
-                    avatar: avatar,
-                    message: message
-                }))
-            }
-        })
-    }
+let users: User[] = []
 
+// Broadcast ws message. Simply sends back the received ws msg from client to all clients
+const broadcastUserWSMessage = (wsMsg: string) => {
+    wss.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(wsMsg)
+        }
+    })
+}
+// Broadcast user list
+const broadcastUserList = () => {
+    const payload = JSON.stringify({
+        type: 'User List',
+        users: users
+    })
+    wss.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(payload)
+        }
+    })
+}
+
+// Broadcast user is typing
+const broadcastUserIsTyping = (ws: WebSocket) => {
+    
+}
+
+wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(data) {
-        const wsMsg:WebSocketMsg = JSON.parse(data as string)
-        // Just broadcast the sent message back to all client sockets
-        wss.clients.forEach(function each(client) {
-            if (client.readyState === WebSocket.OPEN){
-                client.send(data)
-            }
-        })
+        const wsMsg: WebSocketMsg = JSON.parse(data as string)
+
+        // Broadcasts the sent message back to all client sockets
+        if (wsMsg.type === 'Chat') {
+            broadcastUserWSMessage(data as string)
+        }
+
+        // If user joins add to current list of active users and broadcast new list of users to all clients
+        if (wsMsg.type === 'User Join') {
+            users.push({
+                username: wsMsg.username,
+                avatar: wsMsg.avatar!,
+            })
+            broadcastUserWSMessage(data as string)
+            broadcastUserList()
+        }
+
+        // If user leaves delete from current list of active users and broadcast new list of users to all clients
+        if (wsMsg.type === 'User Leave') {
+            users = users.filter(user => user.username !== wsMsg.username && user.avatar !== wsMsg.avatar)
+            broadcastUserWSMessage(data as string)
+            broadcastUserList()
+        }
+
     })
 })
 
-server.listen(port, function() {
+server.listen(port, function () {
     console.log(`Server is listening on ${port}`)
 })

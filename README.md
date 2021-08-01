@@ -24,5 +24,5 @@ MIT
 
 TODO:
 Add the user list to the side bar
-Format messages from users
-Handle user leaving
+    handle receiveing new user list from websocket server in front end
+Add user is typing indicator
