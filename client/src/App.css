@@ -1,7 +1,10 @@
+html {
+  background-color: #f4f6fb;
+}
+
 /* Main App */
 .app {
   align-items: center;
-  background-color: #f1f3f7;
   padding: 20px;
   height: 100vh;
   font-family: Arial;
@@ -30,33 +33,34 @@
   height: 80vh;
 }
 
+/* Sidebar */
 .sidebar {
-  display: flex;
   flex: 1;
+  display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px 20px;
   border-radius: 20px 0 0 20px;
 }
 
-.chat_area {
-  display: flex;
-  flex: 2;
-  flex-direction: column;
-  background-color: #f4f6fb;
-  align-items: center;
-  border-radius: 0 20px 20px 0;
+.sidebar > * {
+  margin: 5px 0;
 }
 
-/* Chat Room Components */
 .user_info {
+  flex: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 25px 0 25px 0;
 }
 
 .user_info > * {
   margin: 5px 0;
+}
+
+.user_avatar {
+  border-radius: 50%;
 }
 
 .username {
@@ -64,8 +68,18 @@
   color: #808080;
 }
 
-.user_avatar {
-  border-radius: 50%;
+.active_users {
+  flex: 3;
+  overflow-y: auto;
+}
+/* Main Chat area */
+.chat_area {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f6fb;
+  align-items: center;
+  border-radius: 0 20px 20px 0;
 }
 
 .chat_log {

@@ -76,7 +76,7 @@ const ChatRoom = () => {
                         Logout
                     </Button>
                 </div>
-                <span>Active users</span>
+                <span><b>Active Users</b></span>
                 <div className='active_users'>
                     {activeUsers.map(x => <div>
                         <img src={x.avatar} className="chat_message_avatar" alt="" />
