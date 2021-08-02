@@ -5,7 +5,8 @@ A simple multi-user chat application demonstarting the functionality of websocke
 ## Features:
 
 - Multiple users can chat together in real-time
-- All users get notified when a user joins/leaves their current room
+- All users get notified when a user joins/leaves the current room
+- Maintains the list of active users
 
 ## Getting Started:
 ### Start the Express server
@@ -13,16 +14,10 @@ A simple multi-user chat application demonstarting the functionality of websocke
 cd client
 yarn install && yarn start
 ```
-### Start the client the Express server
+### Start the client 
 ```
 cd server
 yarn install && yarn start
 ```
-## License
-
-MIT
-
 TODO:
-Add the user list to the side bar
-    handle receiveing new user list from websocket server in front end
 Add user is typing indicator

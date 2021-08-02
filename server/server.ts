@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as http from 'http';
 import * as WebSocket from 'ws';
+import * as uuid from 'node-uuid'
 
 // Type of websocket message ws receives
 type WebSocketMsg = {
@@ -12,6 +13,7 @@ type WebSocketMsg = {
 }
 
 type User = {
+    id: string,
     username: string,
     avatar: string,
 }
@@ -48,34 +50,41 @@ const broadcastUserIsTyping = (ws: WebSocket) => {
 
 }
 
-wss.on('connection', function connection(ws) {
-    ws.on('message', function incoming(data) {
-        const wsMsg: WebSocketMsg = JSON.parse(data as string)
+wss.on('connection', function connection(ws: WebSocket & { id: string }) {
+    ws.id = uuid.v4();
+
+    ws.on('message', (data: string) => {
+        const wsMsg: WebSocketMsg = JSON.parse(data)
 
         // Broadcasts the sent message back to all client sockets
         if (wsMsg.type === 'Chat') {
-            broadcastUserWSMessage(data as string)
+            broadcastUserWSMessage(data)
         }
 
-        // If user joins add to current list of active users and broadcast new list of users to all clients
+        // If user joins, add to current list of active users and broadcast new list of users to all clients
         if (wsMsg.type === 'User Join') {
             users.push({
+                id: ws.id,
                 username: wsMsg.username,
                 avatar: wsMsg.avatar!,
             })
-            broadcastUserWSMessage(data as string)
+            broadcastUserWSMessage(data)
             broadcastUserList()
         }
+    })
 
-        // If user leaves delete from current list of active users and broadcast new list of users to all clients
-        if (wsMsg.type === 'User Leave') {
-            users = users.filter(user => user.username !== wsMsg.username && user.avatar !== wsMsg.avatar)
-            broadcastUserWSMessage(data as string)
-            broadcastUserList()
-        }
-
+    ws.on('close', (a, b) => {
+        const userWhoLeft = users.filter(user => user.id === ws.id)[0]
+        users = users.filter(user => user.id !== ws.id)
+        broadcastUserWSMessage(JSON.stringify({
+            type: 'User Leave',
+            username: userWhoLeft.username,
+            avatar: userWhoLeft.avatar,
+        }))
+        broadcastUserList()
     })
 })
+
 
 server.listen(port, function () {
     console.log(`Server is listening on ${port}`)
