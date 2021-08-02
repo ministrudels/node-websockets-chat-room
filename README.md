@@ -19,5 +19,6 @@ yarn install && yarn start
 cd server
 yarn install && yarn start
 ```
-TODO:
-Add user is typing indicator
+## Next steps:
+- Add user is typing indicator
+- Add user metadata with via ws on connect rather than on message
