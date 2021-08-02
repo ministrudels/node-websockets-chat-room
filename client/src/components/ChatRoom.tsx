@@ -76,14 +76,13 @@ const ChatRoom = () => {
                         Logout
                     </Button>
                 </div>
-                <span><b>Active Users</b></span>
+                <span style={{textAlign:"center"}}><b>Active Users</b></span>
                 <div className='active_users'>
                     {activeUsers.map(x => <div>
                         <img src={x.avatar} className="chat_message_avatar" alt="" />
                         <span>{x.username}</span>
                     </div>)
                     }
-                    {/* TODO: Render active user list from websocket connection */}
                 </div>
             </div>
             <div className={'chat_area'}>
